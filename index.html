@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Huge Stationery – Atelier de Dessin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Pacifico&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & base ─────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: #fffdf7;
+      color: #2d2d2d;
+    }
+
+    /* ── Variables ────────────────────────────────── */
+    :root {
+      --yellow:  #ffd700;
+      --orange:  #ff7b2c;
+      --pink:    #ff4f91;
+      --teal:    #00bfa5;
+      --purple:  #7c4dff;
+      --dark:    #1a1a2e;
+      --radius:  16px;
+    }
+
+    /* ── NAV ──────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 40px;
+      background: rgba(255,253,247,.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 2px solid #ffe8b0;
+    }
+    .logo {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.6rem;
+      color: var(--orange);
+      letter-spacing: 1px;
+    }
+    .logo span { color: var(--purple); }
+    .nav-cta {
+      background: var(--orange);
+      color: #fff;
+      border: none; border-radius: 50px;
+      padding: 10px 24px;
+      font-family: 'Nunito', sans-serif;
+      font-size: .95rem; font-weight: 800;
+      cursor: pointer; text-decoration: none;
+      transition: background .2s, transform .15s;
+    }
+    .nav-cta:hover { background: var(--pink); transform: translateY(-2px); }
+    @media (max-width: 520px) {
+      nav { padding: 12px 16px; }
+      .nav-cta { font-size: .82rem; padding: 8px 16px; }
+    }
+
+    /* ── HERO ─────────────────────────────────────── */
+    .hero {
+      position: relative;
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center;
+      padding: 90px 24px 80px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #fff8e1 0%, #fce4ec 50%, #e8f5e9 100%);
+    }
+    .hero-deco {
+      position: absolute; border-radius: 50%;
+      opacity: .18; pointer-events: none;
+    }
+    .deco1 { width: 420px; height: 420px; background: var(--yellow); top: -120px; left: -100px; }
+    .deco2 { width: 300px; height: 300px; background: var(--pink);   bottom: -80px; right: -60px; }
+    .deco3 { width: 200px; height: 200px; background: var(--teal);   top: 60px;    right: 80px; }
+
+    .hero-badge {
+      background: var(--purple);
+      color: #fff; font-size: .8rem; font-weight: 800;
+      letter-spacing: 1px; text-transform: uppercase;
+      border-radius: 50px; padding: 6px 18px; margin-bottom: 22px;
+      max-width: 90%; text-align: center; line-height: 1.5;
+    }
+    .hero h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      line-height: 1.2;
+      color: var(--dark);
+      max-width: 700px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(90deg, var(--orange), var(--pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      margin-top: 18px;
+      font-size: 1.15rem; line-height: 1.7;
+      color: #555; max-width: 560px;
+    }
+    .hero-btn {
+      margin-top: 36px;
+      display: inline-block;
+      background: linear-gradient(135deg, var(--orange), var(--pink));
+      color: #fff; text-decoration: none;
+      font-size: 1.1rem; font-weight: 800;
+      padding: 16px 44px; border-radius: 50px;
+      box-shadow: 0 8px 24px rgba(255,123,44,.35);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .hero-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(255,123,44,.45); }
+
+    .hero-img {
+      margin-top: 56px;
+      width: min(540px, 90%);
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.12);
+    }
+
+    /* ── FEATURES ────────────────────────────────── */
+    .features {
+      padding: 80px 24px;
+      text-align: center;
+      background: #fff;
+    }
+    .section-title {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      color: var(--dark);
+      margin-bottom: 12px;
+    }
+    .section-sub { color: #777; font-size: 1.05rem; margin-bottom: 52px; }
+
+    .cards {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 28px;
+      max-width: 1100px; margin: 0 auto;
+    }
+    .card {
+      background: #fffdf7;
+      border: 2px solid #ffe8b0;
+      border-radius: var(--radius);
+      padding: 36px 28px;
+      width: min(300px, 100%);
+      transition: transform .25s, box-shadow .25s;
+    }
+    .card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(0,0,0,.09); }
+    .card-icon { font-size: 3rem; margin-bottom: 18px; }
+    .card h3 { font-size: 1.15rem; font-weight: 800; margin-bottom: 10px; color: var(--dark); }
+    .card p  { font-size: .95rem; color: #666; line-height: 1.65; }
+    .card-final { border-color: var(--orange); background: #fff8f0; }
+    .seance-date {
+      display: inline-block;
+      background: var(--purple);
+      color: #fff;
+      font-size: .8rem; font-weight: 800;
+      letter-spacing: 1px; text-transform: uppercase;
+      border-radius: 50px; padding: 4px 14px;
+      margin-bottom: 14px;
+    }
+    .seance-date-final { background: var(--orange); }
+
+    /* ── PACK MATERIEL ──────────────────────────────── */
+    .pack-section {
+      padding: 80px 24px;
+      background: #fff;
+      text-align: center;
+    }
+    .pack-wrapper {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .pack-content {
+      display: flex;
+      align-items: flex-start;
+      gap: 48px;
+      margin-top: 40px;
+      text-align: left;
+    }
+    @media (max-width: 640px) {
+      .pack-content { flex-direction: column; gap: 28px; }
+    }
+    .pack-image-placeholder {
+      flex: 0 0 360px;
+      height: 420px;
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .pack-image-placeholder img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+    @media (max-width: 640px) {
+      .pack-image-placeholder {
+        flex: none;
+        width: 100%;
+        height: 260px;
+      }
+    }
+    .pack-details {
+      flex: 1;
+    }
+    .pack-price {
+      font-family: 'Pacifico', cursive;
+      font-size: 2.6rem;
+      color: var(--orange);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .pack-offer {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--teal), #00897b);
+      color: #fff;
+      font-size: 1rem; font-weight: 800;
+      letter-spacing: 1px; text-transform: uppercase;
+      border-radius: 50px; padding: 6px 20px;
+      margin-bottom: 16px;
+    }
+    .pack-note {
+      font-size: .95rem;
+      color: #888;
+      margin-bottom: 28px;
+      font-style: italic;
+    }
+    .pack-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .pack-list li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.05rem;
+      color: #2d2d2d;
+      font-weight: 600;
+    }
+    .pack-list li::before {
+      content: '';
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--orange), var(--pink));
+      flex-shrink: 0;
+    }
+
+    /* ── GALERIE ─────────────────────────────────── */
+    .gallery {
+      padding: 70px 24px;
+      background: linear-gradient(135deg, #e8f5e9, #fff8e1);
+      text-align: center;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px; max-width: 1000px; margin: 0 auto;
+    }
+    .gallery-item {
+      border-radius: 16px; overflow: hidden;
+      aspect-ratio: 1; position: relative;
+    }
+    .gallery-item div {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 4rem;
+    }
+    .g1 { background: #fff3cd; }
+    .g2 { background: #fce4ec; }
+    .g3 { background: #e8f5e9; }
+    .g4 { background: #e3f2fd; }
+    .g5 { background: #f3e5f5; }
+    .g6 { background: #fff8e1; }
+
+    /* ── FORM SECTION ────────────────────────────── */
+    .form-section {
+      padding: 90px 24px;
+      background: #fff;
+      text-align: center;
+    }
+    .form-wrapper {
+      max-width: 680px; margin: 0 auto;
+      background: #fffdf7;
+      border: 2px solid #ffe8b0;
+      border-radius: 24px;
+      padding: 50px 44px;
+      box-shadow: 0 16px 48px rgba(0,0,0,.07);
+    }
+    @media (max-width: 600px) {
+      .form-wrapper { padding: 32px 20px; }
+    }
+
+    .form-wrapper .section-title { margin-bottom: 6px; }
+    .form-wrapper .section-sub   { margin-bottom: 36px; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    @media (max-width: 520px) { .form-grid { grid-template-columns: 1fr; } }
+    .full-width { grid-column: 1 / -1; }
+
+    label {
+      display: block;
+      font-size: .85rem; font-weight: 700;
+      color: #555; margin-bottom: 6px;
+      text-align: left; text-transform: uppercase; letter-spacing: .5px;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 13px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1rem; color: #2d2d2d;
+      background: #fff;
+      transition: border-color .2s, box-shadow .2s;
+      outline: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 3px rgba(255,123,44,.15);
+    }
+    textarea { resize: vertical; min-height: 100px; }
+
+    .submit-btn {
+      margin-top: 28px;
+      width: 100%;
+      background: linear-gradient(135deg, var(--orange), var(--pink));
+      color: #fff; border: none; border-radius: 50px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.1rem; font-weight: 800;
+      padding: 16px;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(255,123,44,.35);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .submit-btn:hover  { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(255,123,44,.45); }
+    .submit-btn:active { transform: translateY(0); }
+    .submit-btn:disabled { opacity: .7; cursor: not-allowed; transform: none; }
+
+    /* Message retour */
+    #form-message {
+      display: none;
+      margin-top: 22px;
+      padding: 16px 20px;
+      border-radius: 12px;
+      font-weight: 700; font-size: 1rem;
+    }
+    #form-message.success {
+      display: block;
+      background: #e8f5e9; border: 2px solid var(--teal); color: #1b7a6b;
+    }
+    #form-message.error {
+      display: block;
+      background: #fce4ec; border: 2px solid var(--pink); color: #b5004f;
+    }
+
+    /* ── FOOTER ──────────────────────────────────── */
+    footer {
+      background: var(--dark);
+      color: #aaa;
+      text-align: center;
+      padding: 32px 24px;
+      font-size: .9rem;
+    }
+    footer strong { color: var(--yellow); }
+    .footer-logo {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.4rem;
+      color: var(--orange);
+      margin-bottom: 10px;
+    }
+    .footer-logo span { color: var(--purple); }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ─────────────────────────────────────── -->
+  <nav>
+    <a href="https://hugeunivers.com" class="logo" style="text-decoration:none;">Huge <span>Stationery</span></a>
+    <a href="#inscription" class="nav-cta">Inscrire mon enfant</a>
+  </nav>
+
+  <!-- ── HERO ────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-deco deco1"></div>
+    <div class="hero-deco deco2"></div>
+    <div class="hero-deco deco3"></div>
+
+    <div class="hero-badge">Offre speciale · Pack a 9 000 DA = Cours offerts !</div>
+    <h1>L'atelier de peinture<br/>pour les jeunes <em>artistes</em></h1>
+    <p>
+      3 seances intensives de peinture et theorie, un grand concours final
+      avec trois gagnants, et tout le materiel inclus.
+      Ouvert aux <strong>10-15 ans</strong> uniquement.
+    </p>
+    <a href="#programme" class="hero-btn">Voir le programme</a>
+  </section>
+
+  <!-- ── PROGRAMME ────────────────────────────────── -->
+  <section class="features" id="programme">
+    <h2 class="section-title">Le programme</h2>
+    <p class="section-sub">Le rendez-vous des artistes · 14h - 16h · 10 a 15 ans</p>
+    <div class="cards">
+      <div class="card">
+        <div class="seance-date">18 avril</div>
+        <h3>Seance 1 — Peinture & theorie</h3>
+        <p>Decouverte des techniques acryliques, bases de la composition et premiers coups de pinceau sur toile.</p>
+      </div>
+      <div class="card">
+        <div class="seance-date">25 avril</div>
+        <h3>Seance 2 — Peinture & theorie</h3>
+        <p>Approfondissement des techniques, travail sur la couleur et la perspective, suite de l'oeuvre personnelle.</p>
+      </div>
+      <div class="card card-final">
+        <div class="seance-date seance-date-final">02 mai</div>
+        <h3>Grand concours final !</h3>
+        <p>Presentation des oeuvres et selection des <strong>trois gagnants</strong> par un jury de professionnels.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PACK MATERIEL ─────────────────────────────── -->
+  <section class="pack-section" id="pack">
+    <div class="pack-wrapper">
+      <h2 class="section-title">Le Pack Materiel</h2>
+      <p class="section-sub">Achetez le pack et participez aux 3 seances gratuitement</p>
+      <div class="pack-content">
+        <div class="pack-image-placeholder">
+          <img src="IMG_2226.jpeg" alt="Pack materiel atelier">
+        </div>
+        <div class="pack-details">
+          <div class="pack-price">9 000 DA</div>
+          <div class="pack-offer">Cours OFFERTS !</div>
+          <p class="pack-note">Reglement le jour de l'atelier</p>
+          <ul class="pack-list">
+            <li>1 toile (atelier)</li>
+            <li>1 toile a emporter — a remettre peinte le jour du concours</li>
+            <li>1 chevalet</li>
+            <li>1 boite de peinture acrylique 12 couleurs</li>
+            <li>Des pinceaux</li>
+            <li>1 palette</li>
+            <li>Papier dessin (10 feuilles)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── FORMULAIRE D'INSCRIPTION ─────────────────── -->
+  <section class="form-section" id="inscription">
+    <div class="form-wrapper">
+      <h2 class="section-title">Inscription</h2>
+      <p class="section-sub">Remplissez le formulaire, nous vous contacterons sous 24h.</p>
+
+      <form id="registration-form" novalidate>
+        <div class="form-grid">
+
+          <!-- Parent -->
+          <div>
+            <label for="parent-prenom">Prénom du parent *</label>
+            <input type="text" id="parent-prenom" name="parent_prenom" placeholder="ex. Marie" required />
+          </div>
+          <div>
+            <label for="parent-nom">Nom du parent *</label>
+            <input type="text" id="parent-nom" name="parent_nom" placeholder="ex. Dupont" required />
+          </div>
+
+          <div>
+            <label for="email">Email *</label>
+            <input type="email" id="email" name="email" placeholder="votre@email.com" required />
+          </div>
+          <div>
+            <label for="telephone">Téléphone *</label>
+            <input type="tel" id="telephone" name="telephone" placeholder="06 00 00 00 00" required />
+          </div>
+
+          <!-- Enfant -->
+          <div>
+            <label for="enfant-prenom">Prénom de l'enfant *</label>
+            <input type="text" id="enfant-prenom" name="enfant_prenom" placeholder="ex. Lucas" required />
+          </div>
+          <div>
+            <label for="enfant-age">Age de l'enfant * (10 a 15 ans)</label>
+            <select id="enfant-age" name="enfant_age" required>
+              <option value="">-- Selectionnez --</option>
+              <option value="10">10 ans</option>
+              <option value="11">11 ans</option>
+              <option value="12">12 ans</option>
+              <option value="13">13 ans</option>
+              <option value="14">14 ans</option>
+              <option value="15">15 ans</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="niveau">Niveau de peinture</label>
+            <select id="niveau" name="niveau">
+              <option value="Debutant">Debutant</option>
+              <option value="Intermediaire">Intermediaire</option>
+              <option value="Avance">Avance</option>
+            </select>
+          </div>
+          <div class="full-width">
+            <label>Seances</label>
+            <div style="background:#f5f0e8; border-radius:12px; padding:14px 16px; font-size:.95rem; color:#555; line-height:1.8;">
+              18 avril · 25 avril · 02 mai &nbsp;—&nbsp; 14h a 16h
+            </div>
+          </div>
+
+          <div class="full-width">
+            <label for="message">Message (optionnel)</label>
+            <textarea id="message" name="message" placeholder="Informations complémentaires, questions…"></textarea>
+          </div>
+
+        </div><!-- /.form-grid -->
+
+        <button type="submit" class="submit-btn" id="submit-btn">
+          Envoyer l'inscription
+        </button>
+
+        <div id="form-message"></div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ──────────────────────────────────── -->
+  <footer>
+    <div class="footer-logo">Huge <span>Stationery</span></div>
+    <p>© 2026 <strong>Huge Stationery</strong> · Tous droits reserves</p>
+    <p style="margin-top:6px">Atelier de peinture · 10 a 15 ans · 18 avril, 25 avril, 02 mai</p>
+    <p style="margin-top:6px"><a href="https://hugeunivers.com" style="color:var(--yellow); text-decoration:none;">hugeunivers.com</a></p>
+  </footer>
+
+  <!-- ── SCRIPT ──────────────────────────────────── -->
+  <script>
+    // ⚠️  CONFIGURATION : Collez ici l'URL de votre Google Apps Script Web App
+    //     (voir le fichier README_GOOGLE_SHEETS.md pour les instructions)
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxvwV1LvaCUGdpKdouzQxaxBVPC24KeXEigEuNCvyhwAZPn0l7VBCyuVdR_H3aCD-8D1Q/exec";
+
+    const form    = document.getElementById("registration-form");
+    const btn     = document.getElementById("submit-btn");
+    const msgBox  = document.getElementById("form-message");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      // --- Validation simple ---
+      const required = form.querySelectorAll("[required]");
+      let valid = true;
+      required.forEach(el => {
+        el.style.borderColor = "";
+        if (!el.value.trim()) {
+          el.style.borderColor = "#ff4f91";
+          valid = false;
+        }
+      });
+      if (!valid) {
+        showMsg("error", "Veuillez remplir tous les champs obligatoires.");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Envoi en cours…";
+
+      // --- Collecte des données ---
+      const data = {
+        date_inscription: new Date().toLocaleDateString("fr-FR"),
+        parent_prenom:  form.parent_prenom.value.trim(),
+        parent_nom:     form.parent_nom.value.trim(),
+        email:          form.email.value.trim(),
+        telephone:      form.telephone.value.trim(),
+        enfant_prenom:  form.enfant_prenom.value.trim(),
+        enfant_age:     form.enfant_age.value,
+        niveau:         form.niveau.value,
+        seances:        "18 avril, 25 avril, 02 mai — 14h a 16h",
+        message:        form.message.value.trim(),
+      };
+
+      // --- Envoi vers Google Sheets ---
+      if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL === "VOTRE_URL_ICI") {
+        // Mode demo : affiche les donnees dans la console
+        console.table(data);
+        showMsg("success", "Inscription reçue ! Connectez Google Sheets pour envoyer les vraies données.");
+        form.reset();
+      } else {
+        try {
+          await fetch(GOOGLE_SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          });
+          showMsg("success", "Inscription envoyée avec succès ! Nous vous contacterons tres bientot.");
+          form.reset();
+        } catch (err) {
+          showMsg("error", "Une erreur est survenue. Veuillez reessayer ou nous contacter directement.");
+        }
+      }
+
+      btn.disabled = false;
+      btn.textContent = "Envoyer l'inscription";
+    });
+
+    function showMsg(type, text) {
+      msgBox.className = type;
+      msgBox.textContent = text;
+      msgBox.style.display = "block";
+      msgBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  </script>
+
+</body>
+</html>
