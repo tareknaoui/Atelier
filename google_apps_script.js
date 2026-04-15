@@ -6,6 +6,8 @@
  * =====================================================================
  */
 
+const LIMITE_INSCRIPTIONS = 16;
+
 // Colonnes du tableau (dans l'ordre)
 const COLONNES = [
   "Date d'inscription",
@@ -37,6 +39,14 @@ function doPost(e) {
       headerRange.setFontColor("#ffffff");
       headerRange.setFontWeight("bold");
       sheet.setFrozenRows(1);
+    }
+
+    // Verifier la limite
+    const nbInscrits = Math.max(0, sheet.getLastRow() - 1); // -1 pour l'en-tete
+    if (nbInscrits >= LIMITE_INSCRIPTIONS) {
+      return ContentService
+        .createTextOutput(JSON.stringify({ status: "complet", count: nbInscrits }))
+        .setMimeType(ContentService.MimeType.JSON);
     }
 
     // Lire les données JSON
@@ -77,10 +87,22 @@ function doPost(e) {
 }
 
 /**
- * GET simple pour tester que le script est bien déployé
+ * GET : retourne le nombre d'inscrits et si l'atelier est complet
  */
 function doGet() {
-  return ContentService
-    .createTextOutput("✅ Huge Stationery – Script opérationnel !")
-    .setMimeType(ContentService.MimeType.TEXT);
+  try {
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    const nbInscrits = sheet.getLastRow() <= 1 ? 0 : sheet.getLastRow() - 1;
+    return ContentService
+      .createTextOutput(JSON.stringify({
+        count: nbInscrits,
+        limite: LIMITE_INSCRIPTIONS,
+        complet: nbInscrits >= LIMITE_INSCRIPTIONS
+      }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ count: 0, limite: LIMITE_INSCRIPTIONS, complet: false }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
 }

@@ -470,6 +470,11 @@
       <h2 class="section-title">Inscription</h2>
       <p class="section-sub">Remplissez le formulaire, nous vous contacterons sous 24h.</p>
 
+      <div id="complet-banner" style="display:none; background:#fce4ec; border:2px solid var(--pink); border-radius:14px; padding:20px 24px; margin-bottom:28px; font-weight:800; font-size:1.05rem; color:#b5004f;">
+        L'atelier est complet — les 16 places sont prises. Merci de votre interet !
+      </div>
+      <div id="places-restantes" style="display:none; background:#fff8e1; border:2px solid var(--yellow); border-radius:14px; padding:12px 20px; margin-bottom:20px; font-weight:700; color:#b8860b; font-size:.95rem;"></div>
+
       <form id="registration-form" novalidate>
         <div class="form-grid">
 
@@ -559,6 +564,36 @@
     const btn     = document.getElementById("submit-btn");
     const msgBox  = document.getElementById("form-message");
 
+    // --- Verification capacite au chargement ---
+    async function checkCapacite() {
+      if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL === "VOTRE_URL_ICI") return false;
+      try {
+        const res  = await fetch(GOOGLE_SCRIPT_URL);
+        const data = await res.json();
+        if (data.complet) {
+          bloquerFormulaire(data.count, data.limite);
+          return true;
+        }
+        // Affiche le compteur de places restantes
+        const restantes = data.limite - data.count;
+        if (restantes <= 5) {
+          const info = document.getElementById("places-restantes");
+          if (info) { info.textContent = `Plus que ${restantes} place${restantes > 1 ? "s" : ""} disponible${restantes > 1 ? "s" : ""} !`; info.style.display = "block"; }
+        }
+        return false;
+      } catch (e) { return false; }
+    }
+
+    function bloquerFormulaire(count, limite) {
+      form.querySelectorAll("input, select, textarea, button").forEach(el => el.disabled = true);
+      form.style.opacity = ".45";
+      form.style.pointerEvents = "none";
+      const banner = document.getElementById("complet-banner");
+      if (banner) banner.style.display = "block";
+    }
+
+    checkCapacite();
+
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
@@ -601,6 +636,13 @@
         showMsg("success", "Inscription reçue ! Connectez Google Sheets pour envoyer les vraies données.");
         form.reset();
       } else {
+        // Verifier une derniere fois la capacite avant d'envoyer
+        const estComplet = await checkCapacite();
+        if (estComplet) {
+          btn.disabled = false;
+          btn.textContent = "Envoyer l'inscription";
+          return;
+        }
         try {
           await fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
@@ -610,6 +652,8 @@
           });
           showMsg("success", "Inscription envoyée avec succès ! Nous vous contacterons tres bientot.");
           form.reset();
+          // Re-verifier si on vient d'atteindre la limite
+          checkCapacite();
         } catch (err) {
           showMsg("error", "Une erreur est survenue. Veuillez reessayer ou nous contacter directement.");
         }
