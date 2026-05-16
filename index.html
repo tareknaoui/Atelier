@@ -1,14 +1,33 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Huge Stationery – L'atelier des petits picasso</title>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+      }
+    }
+  </script>
   <style>
     /* ── Reset & base ─────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
       font-family: 'Nunito', sans-serif;
@@ -19,26 +38,32 @@
 
     /* ── Variables ────────────────────────────────── */
     :root {
-      --yellow:  #FFD166;
-      --orange:  #F4A261;
-      --red:     #D62828;
-      --red-dark:#8B0000;
-      --blue:    #457B9D;
-      --green:   #8ac926;
-      --dark:    #111;
-      --grey:    #9A9C96; /* Affiche background */
-      --radius:  20px;
+      --yellow: #FFD166;
+      --orange: #F4A261;
+      --red: #D62828;
+      --red-dark: #8B0000;
+      --blue: #457B9D;
+      --green: #8ac926;
+      --dark: #111;
+      --grey: #9A9C96;
+      /* Affiche background */
+      --radius: 20px;
     }
 
     /* ── NAV ──────────────────────────────────────── */
     nav {
-      position: sticky; top: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       padding: 14px 40px;
       background: rgba(253, 252, 248, 0.95);
       backdrop-filter: blur(8px);
       border-bottom: 4px dashed var(--yellow);
     }
+
     .logo {
       font-family: 'Caveat', cursive;
       font-size: 2.4rem;
@@ -48,7 +73,11 @@
       text-decoration: none;
       transform: rotate(-2deg);
     }
-    .logo span { color: var(--blue); }
+
+    .logo span {
+      color: var(--blue);
+    }
+
     .nav-cta {
       background: var(--blue);
       color: #fff;
@@ -56,58 +85,107 @@
       border-radius: 50px;
       padding: 10px 24px;
       font-family: 'Nunito', sans-serif;
-      font-size: 1.05rem; font-weight: 800;
-      cursor: pointer; text-decoration: none;
+      font-size: 1.05rem;
+      font-weight: 800;
+      cursor: pointer;
+      text-decoration: none;
       transition: all .2s;
       box-shadow: 0 4px 0 #1D3557;
     }
-    .nav-cta:hover { transform: translateY(2px); box-shadow: 0 2px 0 #1D3557; }
+
+    .nav-cta:hover {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #1D3557;
+    }
+
     @media (max-width: 520px) {
-      nav { padding: 12px 16px; }
-      .nav-cta { font-size: .85rem; padding: 8px 16px; }
+      nav {
+        padding: 12px 16px;
+      }
+
+      .nav-cta {
+        font-size: .85rem;
+        padding: 8px 16px;
+      }
     }
 
     /* ── HERO ─────────────────────────────────────── */
     .hero {
       position: relative;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       text-align: center;
-      padding: 80px 24px 60px;
-      background-color: var(--grey);
-      min-height: 85vh;
+      padding: 110px 24px 90px;
+      min-height: 100dvh;
       overflow: hidden;
+      background:
+        radial-gradient(ellipse at 20% 10%, #FFE9B0 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 20%, #FFD3D3 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 85%, #C9E4FF 0%, transparent 55%),
+        radial-gradient(ellipse at 10% 80%, #D4F4C2 0%, transparent 55%),
+        linear-gradient(180deg, #FFF8EC 0%, #FDFCF8 100%);
     }
 
-    /* Elements flottants façon DA */
-    .deco {
+    /* Canvas WebGL + traînée de peinture */
+    #hero-canvas,
+    #paint-trail {
       position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
       pointer-events: none;
-      z-index: 1;
     }
-    .deco-1 { top: 10%; left: 10%; font-size: 5rem; animation: float 5s ease-in-out infinite; transform: rotate(-15deg); }
-    .deco-2 { bottom: 15%; right: 8%; font-size: 6rem; animation: float 6s ease-in-out infinite 1s; transform: rotate(20deg); }
-    .deco-3 { top: 20%; right: 15%; font-size: 4rem; animation: float 4s ease-in-out infinite 2s; transform: rotate(45deg); }
-    .deco-4 { bottom: 20%; left: 15%; font-size: 5rem; animation: float 7s ease-in-out infinite 0.5s; transform: rotate(-10deg); }
+    #hero-canvas { z-index: 1; }
+    #paint-trail { z-index: 2; mix-blend-mode: multiply; opacity: .85; }
 
-    @keyframes float {
-      0% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-15px) rotate(8deg); }
-      100% { transform: translateY(0) rotate(0deg); }
+    /* Grain subtil pour casser la bande dégradée */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 3;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .35 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+      opacity: .25;
+      mix-blend-mode: multiply;
     }
+
+    .hero > *:not(#hero-canvas):not(#paint-trail) { position: relative; z-index: 4; }
 
     .hero-top-logo {
-      display: flex; align-items: center; justify-content: center; gap: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
       font-family: 'Nunito', sans-serif;
       font-size: 2.5rem;
       font-weight: 900;
       color: var(--red);
       letter-spacing: -1px;
-      z-index: 2;
       margin-bottom: 20px;
       text-transform: uppercase;
       text-shadow: 2px 2px 0 #fff;
+      animation: heroIn .9s cubic-bezier(.16,1,.3,1) both;
     }
-    .hero-top-logo span { font-weight: 400; color: #555; }
+    .hero h1 { animation: heroIn 1s cubic-bezier(.16,1,.3,1) .15s both; }
+    .hero-dates { animation: heroIn 1s cubic-bezier(.16,1,.3,1) .3s both; }
+    .hero-see-you { animation: heroIn 1s cubic-bezier(.16,1,.3,1) .45s both; }
+    .hero-btn { animation: heroIn 1s cubic-bezier(.16,1,.3,1) .6s both; }
+    @keyframes heroIn {
+      from { opacity: 0; transform: translateY(28px) rotate(var(--r, 0deg)); }
+      to   { opacity: 1; }
+    }
+
+    /* Reveal on scroll */
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1); }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+
+    .hero-top-logo span {
+      font-weight: 400;
+      color: #555;
+    }
 
     .hero h1 {
       font-family: 'Caveat', cursive;
@@ -119,7 +197,7 @@
       transform: rotate(-3deg);
       max-width: 800px;
     }
-    
+
     .hero-dates {
       font-family: 'Caveat', cursive;
       font-size: clamp(2.5rem, 6vw, 4.5rem);
@@ -130,7 +208,7 @@
       max-width: 600px;
       transform: rotate(1deg);
     }
-    
+
     .hero-see-you {
       font-family: 'Caveat', cursive;
       font-size: clamp(2rem, 5vw, 3.5rem);
@@ -144,23 +222,52 @@
       z-index: 2;
       display: inline-block;
       background: var(--red);
-      color: #fff; text-decoration: none;
-      font-size: 1.3rem; font-weight: 800;
-      padding: 12px 40px; border-radius: 50px;
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.3rem;
+      font-weight: 800;
+      padding: 12px 40px;
+      border-radius: 50px;
       font-family: 'Nunito', sans-serif;
       text-transform: lowercase;
       border: 3px solid #fff;
       box-shadow: 0 6px 0 var(--red-dark);
       transition: all .2s;
     }
-    .hero-btn:hover { transform: translateY(4px); box-shadow: 0 2px 0 var(--red-dark); }
+
+    .hero-btn:hover {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 var(--red-dark);
+    }
 
     @media (max-width: 600px) {
-      .hero { padding: 60px 20px 50px; }
-      .deco-1 { top: 5%; left: -5%; font-size: 3rem; }
-      .deco-2 { bottom: 5%; right: -5%; font-size: 4rem; }
-      .deco-3 { top: 10%; right: 5%; font-size: 2.5rem; }
-      .deco-4 { bottom: 10%; left: 5%; font-size: 3rem; }
+      .hero {
+        padding: 60px 20px 50px;
+      }
+
+      .deco-1 {
+        top: 5%;
+        left: -5%;
+        font-size: 3rem;
+      }
+
+      .deco-2 {
+        bottom: 5%;
+        right: -5%;
+        font-size: 4rem;
+      }
+
+      .deco-3 {
+        top: 10%;
+        right: 5%;
+        font-size: 2.5rem;
+      }
+
+      .deco-4 {
+        bottom: 10%;
+        left: 5%;
+        font-size: 3rem;
+      }
     }
 
     /* ── PROGRAMME ────────────────────────────────── */
@@ -169,6 +276,7 @@
       text-align: center;
       background: url('data:image/svg+xml;utf8,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><circle cx="2" cy="2" r="2" fill="%23f0f0f0"/></svg>');
     }
+
     .section-title {
       font-family: 'Caveat', cursive;
       font-size: clamp(2.5rem, 6vw, 4rem);
@@ -176,15 +284,24 @@
       margin-bottom: 12px;
       transform: rotate(-2deg);
     }
-    .section-sub { 
+
+    .section-sub {
       font-family: 'Nunito', sans-serif;
-      color: #555; font-size: 1.15rem; font-weight: 700; margin-bottom: 52px; 
+      color: #555;
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 52px;
     }
 
     .cards {
-      display: flex; flex-wrap: wrap; justify-content: center; gap: 28px;
-      max-width: 1100px; margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 28px;
+      max-width: 1100px;
+      margin: 0 auto;
     }
+
     .card {
       background: #fff;
       border: 4px solid var(--dark);
@@ -195,29 +312,56 @@
       box-shadow: 8px 8px 0 var(--yellow);
       position: relative;
     }
-    .card:nth-child(2) { box-shadow: 8px 8px 0 var(--blue); transform: rotate(1deg); }
-    .card:nth-child(3) { box-shadow: 8px 8px 0 var(--green); transform: rotate(-1deg); }
-    
-    .card:hover { transform: translateY(-6px) scale(1.02); }
-    
-    .card h3 { 
-      font-family: 'Nunito', sans-serif;
-      font-size: 1.3rem; font-weight: 900; margin-bottom: 14px; color: var(--dark); 
+
+    .card:nth-child(2) {
+      box-shadow: 8px 8px 0 var(--blue);
+      transform: rotate(1deg);
     }
-    .card p  { font-size: 1rem; color: #444; line-height: 1.6; font-weight: 600; }
-    
+
+    .card:nth-child(3) {
+      box-shadow: 8px 8px 0 var(--green);
+      transform: rotate(-1deg);
+    }
+
+    .card:hover {
+      transform: translateY(-6px) scale(1.02);
+    }
+
+    .card h3 {
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 900;
+      margin-bottom: 14px;
+      color: var(--dark);
+    }
+
+    .card p {
+      font-size: 1rem;
+      color: #444;
+      line-height: 1.6;
+      font-weight: 600;
+    }
+
     .seance-date {
       display: inline-block;
       background: var(--red);
       color: #fff;
-      font-size: 1rem; font-weight: 900;
-      border-radius: 50px; padding: 6px 18px;
+      font-size: 1rem;
+      font-weight: 900;
+      border-radius: 50px;
+      padding: 6px 18px;
       margin-bottom: 18px;
       border: 2px solid var(--dark);
       box-shadow: 3px 3px 0 var(--dark);
     }
-    .card:nth-child(2) .seance-date { background: var(--blue); }
-    .card:nth-child(3) .seance-date { background: var(--green); }
+
+    .card:nth-child(2) .seance-date {
+      background: var(--blue);
+    }
+
+    .card:nth-child(3) .seance-date {
+      background: var(--green);
+    }
 
     /* ── PACK MATERIEL ──────────────────────────────── */
     .pack-section {
@@ -227,14 +371,27 @@
       border-top: 4px dashed #ddd;
       border-bottom: 4px dashed #ddd;
     }
-    .pack-wrapper { max-width: 900px; margin: 0 auto; }
+
+    .pack-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
     .pack-content {
-      display: flex; align-items: center; gap: 48px;
-      margin-top: 50px; text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 48px;
+      margin-top: 50px;
+      text-align: left;
     }
+
     @media (max-width: 768px) {
-      .pack-content { flex-direction: column; gap: 32px; }
+      .pack-content {
+        flex-direction: column;
+        gap: 32px;
+      }
     }
+
     .pack-image-placeholder {
       flex: 0 0 min(400px, 45%);
       border: 6px solid var(--dark);
@@ -243,30 +400,62 @@
       box-shadow: 10px 10px 0 var(--orange);
       transform: rotate(-2deg);
     }
+
     .pack-image-placeholder img {
-      width: 100%; height: 100%; display: block; object-fit: cover;
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
     }
-    .pack-details { flex: 1; }
+
+    .pack-details {
+      flex: 1;
+    }
+
     .pack-price {
-      font-family: 'Caveat', cursive; font-size: 3.5rem; font-weight: 700;
-      color: var(--red); line-height: 1; margin-bottom: 12px;
+      font-family: 'Caveat', cursive;
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: var(--red);
+      line-height: 1;
+      margin-bottom: 12px;
       transform: rotate(-3deg);
     }
+
     .pack-offer {
-      display: inline-block; background: var(--yellow); color: var(--dark);
-      font-size: 1.1rem; font-weight: 900; text-transform: uppercase;
-      border: 2px solid var(--dark); box-shadow: 4px 4px 0 var(--dark);
-      border-radius: 50px; padding: 8px 24px; margin-bottom: 20px;
+      display: inline-block;
+      background: var(--yellow);
+      color: var(--dark);
+      font-size: 1.1rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      border: 2px solid var(--dark);
+      box-shadow: 4px 4px 0 var(--dark);
+      border-radius: 50px;
+      padding: 8px 24px;
+      margin-bottom: 20px;
     }
+
     .pack-list {
-      list-style: none; display: flex; flex-direction: column; gap: 14px;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
+
     .pack-list li {
-      display: flex; align-items: center; gap: 12px;
-      font-size: 1.1rem; color: #333; font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.1rem;
+      color: #333;
+      font-weight: 800;
     }
+
     .pack-list li::before {
-      content: '🎨'; font-size: 1.2rem; flex-shrink: 0;
+      content: '🎨';
+      font-size: 1.2rem;
+      flex-shrink: 0;
     }
 
     /* ── FORMULAIRE ────────────────────────────── */
@@ -275,8 +464,10 @@
       background: #e9f5f9;
       text-align: center;
     }
+
     .form-wrapper {
-      max-width: 720px; margin: 0 auto;
+      max-width: 720px;
+      margin: 0 auto;
       background: #fff;
       border: 4px solid var(--dark);
       border-radius: 32px;
@@ -284,73 +475,167 @@
       box-shadow: 12px 12px 0 var(--blue);
       position: relative;
     }
+
     .form-wrapper::before {
-      content: '✏️'; position: absolute; top: -30px; right: -20px; font-size: 4rem; transform: rotate(15deg);
-    }
-    @media (max-width: 600px) {
-      .form-wrapper { padding: 32px 20px; box-shadow: 8px 8px 0 var(--blue); }
-      .form-wrapper::before { display: none; }
+      content: '✏️';
+      position: absolute;
+      top: -30px;
+      right: -20px;
+      font-size: 4rem;
+      transform: rotate(15deg);
     }
 
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left; }
-    @media (max-width: 520px) { .form-grid { grid-template-columns: 1fr; } }
-    .full-width { grid-column: 1 / -1; }
+    @media (max-width: 600px) {
+      .form-wrapper {
+        padding: 32px 20px;
+        box-shadow: 8px 8px 0 var(--blue);
+      }
+
+      .form-wrapper::before {
+        display: none;
+      }
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      text-align: left;
+    }
+
+    @media (max-width: 520px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
 
     label {
-      display: block; font-size: .95rem; font-weight: 800;
-      color: var(--dark); margin-bottom: 8px;
+      display: block;
+      font-size: .95rem;
+      font-weight: 800;
+      color: var(--dark);
+      margin-bottom: 8px;
     }
-    input, select, textarea {
-      width: 100%; padding: 14px 18px;
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 14px 18px;
       border: 3px solid #ccc;
       border-radius: 16px;
       font-family: 'Nunito', sans-serif;
-      font-size: 1.05rem; font-weight: 600; color: #222;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #222;
       background: #fafafa;
-      transition: all .2s; outline: none;
+      transition: all .2s;
+      outline: none;
     }
-    input:focus, select:focus, textarea:focus {
+
+    input:focus,
+    select:focus,
+    textarea:focus {
       border-color: var(--blue);
       background: #fff;
       box-shadow: 4px 4px 0 rgba(69, 123, 157, 0.2);
     }
-    textarea { resize: vertical; min-height: 120px; }
+
+    textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
 
     .submit-btn {
-      margin-top: 32px; width: 100%;
+      margin-top: 32px;
+      width: 100%;
       background: var(--yellow);
-      color: var(--dark); border: 3px solid var(--dark); border-radius: 50px;
+      color: var(--dark);
+      border: 3px solid var(--dark);
+      border-radius: 50px;
       font-family: 'Nunito', sans-serif;
-      font-size: 1.2rem; font-weight: 900;
-      padding: 18px; cursor: pointer;
+      font-size: 1.2rem;
+      font-weight: 900;
+      padding: 18px;
+      cursor: pointer;
       box-shadow: 0 8px 0 var(--dark);
       transition: all .15s;
     }
-    .submit-btn:hover  { transform: translateY(4px); box-shadow: 0 4px 0 var(--dark); }
-    .submit-btn:active { transform: translateY(8px); box-shadow: 0 0 0 var(--dark); }
-    .submit-btn:disabled { opacity: .6; cursor: not-allowed; transform: none; box-shadow: 0 8px 0 var(--dark); }
+
+    .submit-btn:hover {
+      transform: translateY(4px);
+      box-shadow: 0 4px 0 var(--dark);
+    }
+
+    .submit-btn:active {
+      transform: translateY(8px);
+      box-shadow: 0 0 0 var(--dark);
+    }
+
+    .submit-btn:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: 0 8px 0 var(--dark);
+    }
 
     /* Message retour */
     #form-message {
-      display: none; margin-top: 24px; padding: 18px; border-radius: 16px;
-      font-weight: 800; font-size: 1.05rem; border: 3px solid; text-align: left;
+      display: none;
+      margin-top: 24px;
+      padding: 18px;
+      border-radius: 16px;
+      font-weight: 800;
+      font-size: 1.05rem;
+      border: 3px solid;
+      text-align: left;
     }
-    #form-message.success { background: #e8f5e9; border-color: var(--green); color: #1b7a6b; }
-    #form-message.error { background: #fce4ec; border-color: var(--red); color: #b5004f; }
+
+    #form-message.success {
+      background: #e8f5e9;
+      border-color: var(--green);
+      color: #1b7a6b;
+    }
+
+    #form-message.error {
+      background: #fce4ec;
+      border-color: var(--red);
+      color: #b5004f;
+    }
 
     /* ── FOOTER ──────────────────────────────────── */
     footer {
       background: var(--dark);
-      color: #fff; text-align: center; padding: 40px 24px; font-size: 1rem; font-weight: 600;
+      color: #fff;
+      text-align: center;
+      padding: 40px 24px;
+      font-size: 1rem;
+      font-weight: 600;
     }
-    footer strong { color: var(--yellow); }
+
+    footer strong {
+      color: var(--yellow);
+    }
+
     .footer-logo {
-      font-family: 'Caveat', cursive; font-size: 2rem; color: var(--red);
-      margin-bottom: 12px; transform: rotate(-2deg); display: inline-block;
+      font-family: 'Caveat', cursive;
+      font-size: 2rem;
+      color: var(--red);
+      margin-bottom: 12px;
+      transform: rotate(-2deg);
+      display: inline-block;
     }
-    .footer-logo span { color: var(--blue); }
+
+    .footer-logo span {
+      color: var(--blue);
+    }
   </style>
 </head>
+
 <body>
 
   <!-- ── NAV ─────────────────────────────────────── -->
@@ -361,10 +646,8 @@
 
   <!-- ── HERO (Affiche Style) ────────────────────── -->
   <section class="hero">
-    <div class="deco deco-1">🖌️</div>
-    <div class="deco deco-2">🎨</div>
-    <div class="deco deco-3">🖍️</div>
-    <div class="deco deco-4">✨</div>
+    <canvas id="hero-canvas"></canvas>
+    <canvas id="paint-trail"></canvas>
 
     <div class="hero-top-logo">
       <img src="IMG_2226.jpeg" alt="Logo" style="display:none;"> <!-- Placeholder if real logo image exists -->
@@ -372,33 +655,33 @@
     </div>
 
     <h1>L'atelier des petits picasso</h1>
-    
+
     <div class="hero-dates">
       samedi le 30 mai<br>
       de 14h00 à 16h00
     </div>
 
     <div class="hero-see-you">See you there!</div>
-    
+
     <a href="#programme" class="hero-btn">huge univers.com</a>
   </section>
 
   <!-- ── PROGRAMME ────────────────────────────────── -->
-  <section class="features" id="programme">
+  <section class="features reveal" id="programme">
     <h2 class="section-title">Au programme !</h2>
     <p class="section-sub">Un après-midi créatif pour les 10 à 15 ans 🎨</p>
     <div class="cards">
-      <div class="card">
+      <div class="card reveal">
         <div class="seance-date">14h00</div>
         <h3>Découverte & Théorie</h3>
         <p>On découvre les couleurs, les pinceaux et les techniques de base pour devenir un vrai petit Picasso !</p>
       </div>
-      <div class="card">
+      <div class="card reveal">
         <div class="seance-date">14h45</div>
         <h3>À vos pinceaux !</h3>
         <p>Chacun crée son œuvre sur toile. On mélange, on peint, on s'amuse et on laisse parler son imagination.</p>
       </div>
-      <div class="card">
+      <div class="card reveal">
         <div class="seance-date">15h45</div>
         <h3>Le Grand Concours</h3>
         <p>Présentation des œuvres ! Un jury choisira les plus belles créations pour gagner des cadeaux surprises !</p>
@@ -407,13 +690,14 @@
   </section>
 
   <!-- ── PACK MATERIEL ─────────────────────────────── -->
-  <section class="pack-section" id="pack">
+  <section class="pack-section reveal" id="pack">
     <div class="pack-wrapper">
       <h2 class="section-title">Le Kit de l'Artiste</h2>
       <p class="section-sub">Tout le matériel est prévu pour s'amuser sans limite !</p>
       <div class="pack-content">
         <div class="pack-image-placeholder">
-          <img src="IMG_2226.jpeg" alt="Pack materiel atelier" onerror="this.src='https://images.unsplash.com/photo-1513364776144-60967b0f800f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80';">
+          <img src="IMG_2226.jpeg" alt="Pack materiel atelier"
+            onerror="this.src='https://images.unsplash.com/photo-1513364776144-60967b0f800f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80';">
         </div>
         <div class="pack-details">
           <div class="pack-price">9 000 DA</div>
@@ -433,15 +717,18 @@
   </section>
 
   <!-- ── FORMULAIRE D'INSCRIPTION ─────────────────── -->
-  <section class="form-section" id="inscription">
+  <section class="form-section reveal" id="inscription">
     <div class="form-wrapper">
       <h2 class="section-title">Rejoins-nous !</h2>
       <p class="section-sub">Remplis vite ce formulaire, les places sont limitées !</p>
 
-      <div id="complet-banner" style="display:none; background:#FFE3E3; border:3px solid var(--red); border-radius:16px; padding:20px; margin-bottom:28px; font-weight:800; font-size:1.1rem; color:var(--red-dark);">
+      <div id="complet-banner"
+        style="display:none; background:#FFE3E3; border:3px solid var(--red); border-radius:16px; padding:20px; margin-bottom:28px; font-weight:800; font-size:1.1rem; color:var(--red-dark);">
         Zut ! L'atelier est complet. Mais reste à l'écoute pour le prochain !
       </div>
-      <div id="places-restantes" style="display:none; background:#FFF3CD; border:3px solid var(--yellow); border-radius:16px; padding:16px; margin-bottom:24px; font-weight:800; color:#856404; font-size:1.05rem;"></div>
+      <div id="places-restantes"
+        style="display:none; background:#FFF3CD; border:3px solid var(--yellow); border-radius:16px; padding:16px; margin-bottom:24px; font-weight:800; color:#856404; font-size:1.05rem;">
+      </div>
 
       <form id="registration-form" novalidate>
         <div class="form-grid">
@@ -493,7 +780,8 @@
           </div>
           <div class="full-width">
             <label>Date de l'atelier</label>
-            <div style="background:#fff; border:3px solid #ccc; border-radius:16px; padding:14px 18px; font-size:1.05rem; font-weight:700; color:#444;">
+            <div
+              style="background:#fff; border:3px solid #ccc; border-radius:16px; padding:14px 18px; font-size:1.05rem; font-weight:700; color:#444;">
               Samedi 30 mai &nbsp;—&nbsp; 14h00 à 16h00
             </div>
           </div>
@@ -519,23 +807,236 @@
     <div class="footer-logo">Huge <span>Stationery</span></div>
     <p>© 2026 <strong>Huge Stationery</strong> · Tous droits réservés</p>
     <p style="margin-top:8px">L'atelier des petits picasso · Samedi 30 mai</p>
-    <p style="margin-top:8px"><a href="https://hugeunivers.com" style="color:var(--yellow); text-decoration:none;">hugeunivers.com</a></p>
+    <p style="margin-top:8px"><a href="https://hugeunivers.com"
+        style="color:var(--yellow); text-decoration:none;">hugeunivers.com</a></p>
   </footer>
+
+  <!-- ── THREE.JS PAINT SCENE ────────────────────── -->
+  <script type="module">
+    import * as THREE from 'three';
+
+    const heroEl = document.querySelector('.hero');
+    const canvas = document.getElementById('hero-canvas');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.15;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+    camera.position.set(0, 0, 14);
+
+    // Lights — warm key + cool rim + ambient fill
+    scene.add(new THREE.AmbientLight(0xfff4e0, 0.55));
+    const key = new THREE.DirectionalLight(0xffe8b8, 1.7);
+    key.position.set(6, 8, 6); scene.add(key);
+    const rim = new THREE.DirectionalLight(0x9ec5ff, 1.1);
+    rim.position.set(-7, -2, 4); scene.add(rim);
+    const pop = new THREE.PointLight(0xff9bb8, 1.2, 25);
+    pop.position.set(0, 0, 8); scene.add(pop);
+
+    // Palette de peinture — gouttes colorées
+    const palette = [
+      0xFFD166, 0xF4A261, 0xE63946, 0xEF476F,
+      0x457B9D, 0x4CC9F0, 0x8AC926, 0x7FB069,
+      0xFFB4A2, 0xB388EB, 0xFFFFFF
+    ];
+
+    // Géométrie "goutte de peinture" : icosaèdre lissé, déformé par vertex noise CPU une fois
+    const baseGeo = new THREE.IcosahedronGeometry(1, 6);
+    const pos = baseGeo.attributes.position;
+    const tmp = new THREE.Vector3();
+    // déformation organique (simplex-ish via sin combos)
+    const noise = (x, y, z) =>
+      Math.sin(x * 1.7 + Math.cos(y * 1.3)) * 0.5 +
+      Math.sin(y * 2.1 + Math.cos(z * 1.7)) * 0.3 +
+      Math.sin(z * 1.5 + Math.cos(x * 2.3)) * 0.2;
+
+    const droplets = [];
+    const N = window.innerWidth < 700 ? 14 : 26;
+
+    for (let i = 0; i < N; i++) {
+      const geo = baseGeo.clone();
+      const p = geo.attributes.position;
+      const seed = Math.random() * 10;
+      for (let j = 0; j < p.count; j++) {
+        tmp.fromBufferAttribute(p, j);
+        const n = noise(tmp.x + seed, tmp.y + seed, tmp.z + seed);
+        tmp.multiplyScalar(1 + n * 0.18);
+        p.setXYZ(j, tmp.x, tmp.y, tmp.z);
+      }
+      geo.computeVertexNormals();
+
+      const color = palette[i % palette.length];
+      const mat = new THREE.MeshPhysicalMaterial({
+        color,
+        roughness: 0.18,
+        metalness: 0.0,
+        clearcoat: 1.0,
+        clearcoatRoughness: 0.08,
+        sheen: 0.6,
+        sheenColor: new THREE.Color(color).lerp(new THREE.Color(0xffffff), 0.4),
+        transmission: 0.0,
+        reflectivity: 0.55,
+      });
+
+      const mesh = new THREE.Mesh(geo, mat);
+      const r = 0.45 + Math.random() * 0.9;
+      mesh.scale.setScalar(r);
+
+      mesh.userData = {
+        baseX: (Math.random() - 0.5) * 18,
+        baseY: (Math.random() - 0.5) * 11,
+        baseZ: -2 - Math.random() * 6,
+        speed: 0.2 + Math.random() * 0.6,
+        phase: Math.random() * Math.PI * 2,
+        spin: new THREE.Vector3(
+          (Math.random() - 0.5) * 0.5,
+          (Math.random() - 0.5) * 0.5,
+          (Math.random() - 0.5) * 0.5
+        ),
+        amp: 0.4 + Math.random() * 0.9
+      };
+      scene.add(mesh);
+      droplets.push(mesh);
+    }
+
+    // Mouse parallax
+    const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
+    window.addEventListener('pointermove', (e) => {
+      const rect = heroEl.getBoundingClientRect();
+      mouse.tx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.ty = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
+    }, { passive: true });
+
+    function resize() {
+      const w = heroEl.clientWidth;
+      const h = heroEl.clientHeight;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const clock = new THREE.Clock();
+    let running = true;
+    document.addEventListener('visibilitychange', () => { running = !document.hidden; if (running) clock.getDelta(); });
+
+    // Pause render quand le hero sort du viewport
+    let visible = true;
+    const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; }, { threshold: 0 });
+    io.observe(heroEl);
+
+    function tick() {
+      requestAnimationFrame(tick);
+      if (!running || !visible) return;
+      const t = clock.getElapsedTime();
+      const dt = clock.getDelta();
+
+      mouse.x += (mouse.tx - mouse.x) * 0.06;
+      mouse.y += (mouse.ty - mouse.y) * 0.06;
+      camera.position.x = mouse.x * 1.4;
+      camera.position.y = mouse.y * 0.9;
+      camera.lookAt(0, 0, 0);
+
+      for (const d of droplets) {
+        const u = d.userData;
+        d.position.x = u.baseX + Math.sin(t * u.speed + u.phase) * u.amp;
+        d.position.y = u.baseY + Math.cos(t * u.speed * 0.8 + u.phase) * u.amp * 0.8;
+        d.position.z = u.baseZ + Math.sin(t * u.speed * 0.5 + u.phase) * 0.6;
+        d.rotation.x += u.spin.x * dt;
+        d.rotation.y += u.spin.y * dt;
+        d.rotation.z += u.spin.z * dt;
+      }
+
+      renderer.render(scene, camera);
+    }
+    tick();
+
+    // ── PAINT TRAIL 2D ──────────────────────────────
+    const trail = document.getElementById('paint-trail');
+    const tctx = trail.getContext('2d');
+    let lastX = null, lastY = null, lastT = 0;
+    const trailColors = ['#E63946', '#F4A261', '#FFD166', '#457B9D', '#8AC926', '#EF476F', '#4CC9F0'];
+    let ci = 0;
+
+    function sizeTrail() {
+      const dpr = Math.min(window.devicePixelRatio, 2);
+      trail.width = heroEl.clientWidth * dpr;
+      trail.height = heroEl.clientHeight * dpr;
+      tctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      tctx.lineCap = 'round';
+      tctx.lineJoin = 'round';
+    }
+    sizeTrail();
+    window.addEventListener('resize', sizeTrail);
+
+    // fade-out continu
+    function fade() {
+      tctx.save();
+      tctx.globalCompositeOperation = 'destination-out';
+      tctx.fillStyle = 'rgba(0,0,0,0.025)';
+      tctx.fillRect(0, 0, trail.width, trail.height);
+      tctx.restore();
+      requestAnimationFrame(fade);
+    }
+    fade();
+
+    heroEl.addEventListener('pointermove', (e) => {
+      const rect = heroEl.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const now = performance.now();
+      if (lastX !== null) {
+        const dx = x - lastX, dy = y - lastY, dist = Math.hypot(dx, dy);
+        const speed = Math.min(60, dist / Math.max(1, (now - lastT))) * 1000 / 60;
+        const w = Math.max(4, Math.min(28, 8 + speed * 0.15));
+        tctx.strokeStyle = trailColors[ci % trailColors.length];
+        tctx.lineWidth = w;
+        tctx.globalAlpha = 0.55;
+        tctx.beginPath();
+        tctx.moveTo(lastX, lastY);
+        tctx.quadraticCurveTo((lastX + x) / 2, (lastY + y) / 2, x, y);
+        tctx.stroke();
+        // petite éclaboussure
+        if (Math.random() < 0.18) {
+          const r = 2 + Math.random() * 5;
+          const ang = Math.random() * Math.PI * 2;
+          const d = w * (0.8 + Math.random() * 1.4);
+          tctx.beginPath();
+          tctx.fillStyle = tctx.strokeStyle;
+          tctx.globalAlpha = 0.5;
+          tctx.arc(x + Math.cos(ang) * d, y + Math.sin(ang) * d, r, 0, Math.PI * 2);
+          tctx.fill();
+        }
+        if (dist > 80) ci++;
+      }
+      lastX = x; lastY = y; lastT = now;
+    });
+    heroEl.addEventListener('pointerleave', () => { lastX = lastY = null; ci++; });
+
+    // ── REVEAL ON SCROLL ─────────────────────────
+    const revealIO = new IntersectionObserver((entries) => {
+      for (const en of entries) if (en.isIntersecting) { en.target.classList.add('in'); revealIO.unobserve(en.target); }
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => revealIO.observe(el));
+  </script>
 
   <!-- ── SCRIPT ──────────────────────────────────── -->
   <script>
     // ⚠️  CONFIGURATION : URL Google Apps Script Web App
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxvwV1LvaCUGdpKdouzQxaxBVPC24KeXEigEuNCvyhwAZPn0l7VBCyuVdR_H3aCD-8D1Q/exec";
 
-    const form    = document.getElementById("registration-form");
-    const btn     = document.getElementById("submit-btn");
-    const msgBox  = document.getElementById("form-message");
+    const form = document.getElementById("registration-form");
+    const btn = document.getElementById("submit-btn");
+    const msgBox = document.getElementById("form-message");
 
     // --- Verification capacite au chargement ---
     async function checkCapacite() {
       if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL === "VOTRE_URL_ICI") return false;
       try {
-        const res  = await fetch(GOOGLE_SCRIPT_URL);
+        const res = await fetch(GOOGLE_SCRIPT_URL);
         const data = await res.json();
         if (data.complet) {
           bloquerFormulaire(data.count, data.limite);
@@ -585,15 +1086,15 @@
       // --- Collecte des données ---
       const data = {
         date_inscription: new Date().toLocaleDateString("fr-FR"),
-        parent_prenom:  form.parent_prenom.value.trim(),
-        parent_nom:     form.parent_nom.value.trim(),
-        email:          form.email.value.trim(),
-        telephone:      form.telephone.value.trim(),
-        enfant_prenom:  form.enfant_prenom.value.trim(),
-        enfant_age:     form.enfant_age.value,
-        niveau:         form.niveau.value,
-        seances:        "Samedi 30 mai — 14h00 à 16h00",
-        message:        form.message.value.trim(),
+        parent_prenom: form.parent_prenom.value.trim(),
+        parent_nom: form.parent_nom.value.trim(),
+        email: form.email.value.trim(),
+        telephone: form.telephone.value.trim(),
+        enfant_prenom: form.enfant_prenom.value.trim(),
+        enfant_age: form.enfant_age.value,
+        niveau: form.niveau.value,
+        seances: "Samedi 30 mai — 14h00 à 16h00",
+        message: form.message.value.trim(),
       };
 
       // --- Envoi vers Google Sheets ---
@@ -636,4 +1137,5 @@
   </script>
 
 </body>
+
 </html>
