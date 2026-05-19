@@ -607,6 +607,180 @@
       color: #b5004f;
     }
 
+    /* ── TARIFS ──────────────────────────────────── */
+    .tarifs-section {
+      padding: 80px 24px;
+      background: #fffbf0;
+      text-align: center;
+      border-top: 4px dashed #ddd;
+    }
+
+    .tarifs-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 32px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .tarif-card {
+      background: #fff;
+      border: 4px solid var(--dark);
+      border-radius: var(--radius);
+      padding: 40px 32px;
+      width: min(360px, 100%);
+      text-align: center;
+      position: relative;
+      transition: transform .25s;
+    }
+
+    .tarif-card:first-child {
+      box-shadow: 8px 8px 0 var(--yellow);
+      transform: rotate(-1deg);
+    }
+
+    .tarif-card:last-child {
+      box-shadow: 8px 8px 0 var(--red);
+      transform: rotate(1deg);
+      background: #fffdf5;
+    }
+
+    .tarif-card:hover {
+      transform: translateY(-6px) scale(1.02) !important;
+    }
+
+    .tarif-badge {
+      display: inline-block;
+      background: var(--yellow);
+      color: var(--dark);
+      font-size: .85rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      border: 2px solid var(--dark);
+      border-radius: 50px;
+      padding: 5px 16px;
+      margin-bottom: 16px;
+    }
+
+    .tarif-card:last-child .tarif-badge {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .tarif-price {
+      font-family: 'Caveat', cursive;
+      font-size: 4rem;
+      font-weight: 700;
+      color: var(--red);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .tarif-card:first-child .tarif-price { color: var(--dark); }
+
+    .tarif-desc {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    .tarif-includes {
+      list-style: none;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .tarif-includes li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .tarif-includes li .check { color: var(--green); font-size: 1.1rem; }
+    .tarif-includes li .cross { color: #bbb; font-size: 1.1rem; }
+
+    .tarif-cta {
+      display: block;
+      margin-top: 28px;
+      background: var(--blue);
+      color: #fff;
+      border: 3px solid var(--dark);
+      border-radius: 50px;
+      padding: 14px 28px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 900;
+      text-decoration: none;
+      box-shadow: 0 5px 0 var(--dark);
+      transition: all .2s;
+    }
+
+    .tarif-card:last-child .tarif-cta {
+      background: var(--red);
+    }
+
+    .tarif-cta:hover {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 var(--dark);
+    }
+
+    /* ── PACK prices list ─────────────────────────── */
+    .pack-item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pack-item-name { flex: 1; }
+    .pack-item-price {
+      font-size: .95rem;
+      font-weight: 700;
+      color: #888;
+      white-space: nowrap;
+    }
+
+    .pack-total-line {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 3px dashed #ddd;
+    }
+
+    .pack-total-line .pack-item-price {
+      color: #d00;
+      font-size: 1.05rem;
+      text-decoration: line-through;
+    }
+
+    .pack-value-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .pack-value-label {
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: var(--dark);
+    }
+
+    .pack-value-price {
+      font-family: 'Caveat', cursive;
+      font-size: 2rem;
+      color: var(--red);
+      font-weight: 700;
+    }
+
     /* ── FOOTER ──────────────────────────────────── */
     footer {
       background: var(--dark);
@@ -657,8 +831,7 @@
     <h1>L'atelier des petits picasso</h1>
 
     <div class="hero-dates">
-      samedi le 30 mai<br>
-      de 14h00 à 16h00
+      30 mai · 6 juin · 13 juin
     </div>
 
     <div class="hero-see-you">See you there!</div>
@@ -669,23 +842,57 @@
   <!-- ── PROGRAMME ────────────────────────────────── -->
   <section class="features reveal" id="programme">
     <h2 class="section-title">Au programme !</h2>
-    <p class="section-sub">Un après-midi créatif pour les 10 à 15 ans</p>
+    <p class="section-sub">3 samedis pour libérer ta créativité !</p>
     <div class="cards">
       <div class="card reveal">
-        <div class="seance-date">14h00</div>
-        <h3>Découverte & Théorie</h3>
-        <p>On découvre les couleurs, les pinceaux et les techniques de base pour devenir un vrai petit Picasso !</p>
+        <div class="seance-date">Samedi 30 mai</div>
+        <h3>Séance 1 : Découverte</h3>
+        <p>On découvre les couleurs, les pinceaux et les techniques de base. Chacun commence son œuvre sur toile !</p>
       </div>
       <div class="card reveal">
-        <div class="seance-date">14h45</div>
-        <h3>À vos pinceaux !</h3>
-        <p>Chacun crée son œuvre sur toile. On mélange, on peint, on s'amuse et on laisse parler son imagination.</p>
+        <div class="seance-date">Samedi 6 juin</div>
+        <h3>Séance 2 : Création</h3>
+        <p>On continue et on perfectionne. On mélange, on peint, on s'amuse et on laisse parler son imagination.</p>
       </div>
       <div class="card reveal">
-        <div class="seance-date">15h45</div>
-        <h3>Le Grand Concours</h3>
-        <p>Présentation des œuvres ! Un jury choisira les plus belles créations pour gagner des cadeaux surprises !</p>
+        <div class="seance-date">Samedi 13 juin</div>
+        <h3>La Cérémonie des Gagnants 🏆</h3>
+        <p>Présentation des œuvres et remise des récompenses ! Un jury choisira les plus belles créations.</p>
       </div>
+    </div>
+  </section>
+
+  <!-- ── TARIFS ────────────────────────────────────── -->
+  <section class="tarifs-section reveal" id="tarifs">
+    <h2 class="section-title">Choisissez votre formule</h2>
+    <p class="section-sub">Deux options pour participer à l'atelier</p>
+    <div class="tarifs-grid">
+
+      <div class="tarif-card reveal">
+        <div class="tarif-badge">Formule Simple</div>
+        <div class="tarif-price">5 000 DA</div>
+        <div class="tarif-desc">Le cours uniquement</div>
+        <ul class="tarif-includes">
+          <li><span class="check">✓</span> Participation aux 2 séances</li>
+          <li><span class="check">✓</span> Participation à la cérémonie du 13 juin</li>
+          <li><span class="cross">✗</span> Matériel non inclus</li>
+        </ul>
+        <a href="#inscription" class="tarif-cta">Je m'inscris</a>
+      </div>
+
+      <div class="tarif-card reveal">
+        <div class="tarif-badge">⭐ Meilleure valeur</div>
+        <div class="tarif-price">9 000 DA</div>
+        <div class="tarif-desc">Pack complet — Cours <strong>OFFERT !</strong></div>
+        <ul class="tarif-includes">
+          <li><span class="check">✓</span> Cours inclus gratuitement</li>
+          <li><span class="check">✓</span> Kit matériel complet</li>
+          <li><span class="check">✓</span> Toile bonus à ramener chez soi</li>
+          <li><span class="check">✓</span> Feuilles de dessin offertes</li>
+        </ul>
+        <a href="#inscription" class="tarif-cta">Je prends le pack</a>
+      </div>
+
     </div>
   </section>
 
@@ -703,14 +910,68 @@
           <div class="pack-price">9 000 DA</div>
           <div class="pack-offer">Atelier OFFERT !</div>
           <ul class="pack-list">
-            <li>1 belle toile pour l'atelier</li>
-            <li>1 toile à emporter à la maison</li>
-            <li>1 super chevalet</li>
-            <li>1 boîte de 12 couleurs acryliques</li>
-            <li>Des pinceaux de toutes les tailles</li>
-            <li>1 palette pour les mélanges</li>
-            <li>10 feuilles de papier dessin</li>
+            <li>
+              <div class="pack-item-row">
+                <span class="pack-item-name">1 Chevalet</span>
+                <span class="pack-item-price">4 900 DA</span>
+              </div>
+            </li>
+            <li>
+              <div class="pack-item-row">
+                <span class="pack-item-name">Peinture acrylique</span>
+                <span class="pack-item-price">2 200 DA</span>
+              </div>
+            </li>
+            <li>
+              <div class="pack-item-row">
+                <span class="pack-item-name">Toile pour l'atelier</span>
+                <span class="pack-item-price">1 400 DA</span>
+              </div>
+            </li>
+            <li>
+              <div class="pack-item-row">
+                <span class="pack-item-name">Pinceaux (toutes tailles)</span>
+                <span class="pack-item-price">1 200 DA</span>
+              </div>
+            </li>
+            <li>
+              <div class="pack-item-row">
+                <span class="pack-item-name">Outils de peinture</span>
+                <span class="pack-item-price">500 DA</span>
+              </div>
+            </li>
+            <li>
+              <div class="pack-item-row">
+                <span class="pack-item-name">Crayon</span>
+                <span class="pack-item-price">80 DA</span>
+              </div>
+            </li>
+            <li>
+              <div class="pack-item-row">
+                <span class="pack-item-name">🎁 1 toile bonus offerte</span>
+                <span class="pack-item-price">1 400 DA</span>
+              </div>
+            </li>
+            <li>
+              <div class="pack-item-row">
+                <span class="pack-item-name">🎁 Feuille de dessin offerte</span>
+                <span class="pack-item-price">offert</span>
+              </div>
+            </li>
           </ul>
+          <div class="pack-total-line">
+            <div class="pack-item-row">
+              <span class="pack-item-name" style="font-weight:800; color:#555;">Valeur totale du matériel</span>
+              <span class="pack-item-price">11 680 DA</span>
+            </div>
+            <div class="pack-value-row" style="margin-top:6px;">
+              <span class="pack-value-label">+ Cours (valeur 5 000 DA)</span>
+            </div>
+            <div class="pack-value-row" style="margin-top:12px; background:var(--yellow); border-radius:12px; padding:10px 14px; border:2px solid var(--dark);">
+              <span class="pack-value-label">Votre prix :</span>
+              <span class="pack-value-price">9 000 DA</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -779,10 +1040,19 @@
             </select>
           </div>
           <div class="full-width">
-            <label>Date de l'atelier</label>
+            <label for="formule">Formule choisie *</label>
+            <select id="formule" name="formule" required>
+              <option value="">-- Choisissez une formule --</option>
+              <option value="Cours seul - 5000 DA">Cours uniquement — 5 000 DA</option>
+              <option value="Pack complet - 9000 DA">Pack complet (matériel + cours offert) — 9 000 DA</option>
+            </select>
+          </div>
+
+          <div class="full-width">
+            <label>Dates de l'atelier</label>
             <div
-              style="background:#fff; border:3px solid #ccc; border-radius:16px; padding:14px 18px; font-size:1.05rem; font-weight:700; color:#444;">
-              Samedi 30 mai &nbsp;—&nbsp; 14h00 à 16h00
+              style="background:#fff; border:3px solid #ccc; border-radius:16px; padding:14px 18px; font-size:1.05rem; font-weight:700; color:#444; line-height:1.8;">
+              Samedi 30 mai &nbsp;·&nbsp; Samedi 6 juin &nbsp;·&nbsp; Samedi 13 juin (cérémonie)
             </div>
           </div>
 
@@ -806,7 +1076,7 @@
   <footer>
     <div class="footer-logo">Huge <span>Stationery</span></div>
     <p>© 2026 <strong>Huge Stationery</strong> · Tous droits réservés</p>
-    <p style="margin-top:8px">L'atelier des petits picasso · Samedi 30 mai</p>
+    <p style="margin-top:8px">L'atelier des petits picasso · 30 mai · 6 juin · 13 juin</p>
     <p style="margin-top:8px"><a href="https://hugeunivers.com"
         style="color:var(--yellow); text-decoration:none;">hugeunivers.com</a></p>
   </footer>
@@ -1093,7 +1363,8 @@
         enfant_prenom: form.enfant_prenom.value.trim(),
         enfant_age: form.enfant_age.value,
         niveau: form.niveau.value,
-        seances: "Samedi 30 mai — 14h00 à 16h00",
+        formule: form.formule.value,
+        seances: "30 mai · 6 juin · 13 juin",
         message: form.message.value.trim(),
       };
 
